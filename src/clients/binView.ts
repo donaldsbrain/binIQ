@@ -17,7 +17,7 @@ export const getClient = (layoutId: string): Promise<BinViewClient> =>
         .then(response => response.status === 200 ? response.json() : Promise.reject(response))
         .then((layout: BinLayout) => {
             const clientId = nextClientId;
-            console.log(`Client ${clientId}: settings loaded.`)
+            console.log(`Client ${clientId}: initial layout loaded.`)
             const subject = new Subject<BinLayout>();
             let quitBeforeWeStarted = false;
             let disconnectActions: (() => void)[] = [() => quitBeforeWeStarted = true];            

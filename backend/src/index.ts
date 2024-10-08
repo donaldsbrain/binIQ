@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { ClientToServiceEvents, ServiceToClientEvents } from './domain/events';
 import { subscribeToUpdates } from './services/layoutUpdateService';
 import { demoLayout } from './demo/liveDemo';
+import { binLayoutController } from './services/binLayoutsController';
 
 // copied from sharks with lasers to get rid of stupid errors with socket.io - code seems identical but this works for some reason
 const app = express();
@@ -33,9 +34,8 @@ app.use((_, res, next) => {
     res.append('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
+binLayoutController(app);
 
 server.listen(3000, () => {
-  console.log('listening on *:3000');
-
-  setInterval(demoLayout, 2000);
+  console.log('listening on *:3000');  
 });

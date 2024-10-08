@@ -9,7 +9,7 @@ function App() {
 
   useEffect(() => {
     let connectionState: 1 | 2 | 3 = 1; // 1 = connected, 2 = disconnecting, 3 = disconnected
-    getClient('layoutId').then(client => {
+    getClient('55420215-355d-478d-abe0-7d5c61e81a4e').then(client => {
       if (connectionState === 1) {
         console.log(`client (${client.id}) connected`)
         
