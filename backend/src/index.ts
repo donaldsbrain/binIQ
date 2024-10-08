@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
+import { demoLayout } from './demo/liveDemo';
 
 const app = express();
 const port = 5000;
@@ -37,4 +38,5 @@ app.get('/api', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
+  demoLayout();
 });
