@@ -1,10 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { getClient } from './clients/binView';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let connectionState: 1 | 2 | 3 = 1; // 1 = connected, 2 = disconnecting, 3 = disconnected
+    getClient('layoutId').then(client => {
+      if (connectionState === 1) {
+        console.log(`client (${client.id}) connected`)
+        
+    } else if (connectionState === 2) {
+        console.log(`disconnecting client (${client.id})`)
+        client.disconnect();        
+        connectionState = 3;
+    }
+    });
+    return () => {
+      connectionState = 2;
+    }
+  }, []);
 
   return (
     <>

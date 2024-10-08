@@ -5,23 +5,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
     "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {    
+  "dependencies": {
     "express": "^4.21.0",
+    "hmi": "file:../../hmi",
     "socket.io": "^4.8.0",
-    "uuid": "^10.0.0",
-    "hmi": "file:../../hmi/src"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@types/uuid": "^10.0.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
     "@types/socket.io": "^3.0.1",
+    "@types/uuid": "^10.0.0",
+    "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }
