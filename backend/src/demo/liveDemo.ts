@@ -3,7 +3,7 @@ import { pipe, tap } from 'hmi/src/utility/pipe';
 import { addRectangularBin, BinLayout, binLayout } from '../domain/binLayout';
 import { applyLayout } from '../services/layoutUpdateService';
 
-export const demoLayout = () => pipe(
+export const liveDemo = () => pipe(
     binLayout({id: '55420215-355d-478d-abe0-7d5c61e81a4e', dimensions: dimension(16, 9)}),
     addRectangularBin({
         center: point(8, 4.5), 

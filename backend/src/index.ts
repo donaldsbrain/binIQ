@@ -3,7 +3,7 @@ import * as http from 'http';
 import { Server } from 'socket.io';
 import { ClientToServiceEvents, ServiceToClientEvents } from './domain/events';
 import { subscribeToUpdates } from './services/layoutUpdateService';
-import { demoLayout } from './demo/liveDemo';
+import { liveDemo } from './demo/liveDemo';
 import { binLayoutController } from './services/binLayoutsController';
 
 // copied from sharks with lasers to get rid of stupid errors with socket.io - code seems identical but this works for some reason
@@ -37,5 +37,6 @@ app.use((_, res, next) => {
 binLayoutController(app);
 
 server.listen(3000, () => {
-  console.log('listening on *:3000');  
+  console.log('listening on *:3000');
+  liveDemo();  
 });
