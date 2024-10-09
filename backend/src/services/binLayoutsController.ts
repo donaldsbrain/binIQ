@@ -7,7 +7,7 @@ export function binLayoutController(app: Express) {
     app.get('/api/bin-layouts/:layoutId', (req, res) => {
         pipe(
             getLayout(req.params.layoutId),
-            tap(console.log),
+            //tap(console.log),
             matchSome(layout => res.json(layout)),
             matchNone(() => { 
                 res.status(404).send(`LayoutId (${req.params.layoutId}) not found.`) })

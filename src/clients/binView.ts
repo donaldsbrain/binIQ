@@ -25,17 +25,23 @@ export const getClient = (layoutId: string): Promise<BinViewClient> =>
                 subject.next(layout);
                 // a short wait prevents an early disconnect error when vite double renders components in dev mode
                 if (quitBeforeWeStarted) {
-                    console.log(`Client ${clientId}: quit before connecting to websocket. (Silly Vite.)`)
+                    console.log(`(${clientId}) quit before connecting to websocket. (Silly Vite.)`)
                     return;
                 }
-                const socket: Socket<ServiceToClientEvents, ClientToServiceEvents> = io('/spectate', {
+                const socket: Socket<ServiceToClientEvents, ClientToServiceEvents> = io('/', {
                     transports: ['websocket'], // Optional, to use WebSockets only
                 });
                 
                 socket.on('connect', () => {
+                    console.log(`(${clientId}) connected to websocket.`)
                     socket.on('layoutUpdated', (arena: BinLayout) => {
+                        console.log(`(${clientId}) layoutUpdated!`);
                         subject.next(arena);
                     });                    
+                });
+
+                socket.on('connect_error', (error) => {
+                    console.error(`(${clientId}) connect_error`, error);
                 });
 
                 disconnectActions.push(() => {                    

@@ -38,5 +38,6 @@ binLayoutController(app);
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
-  liveDemo();  
+  setInterval(liveDemo, 2000);
+  //liveDemo();
 });

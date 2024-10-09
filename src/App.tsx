@@ -1,53 +1,22 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect } from 'react'
 import './App.css'
 import { getClient } from './clients/binView';
+import { Route, BrowserRouter as Router, Routes, useParams } from 'react-router-dom';
+import { BinLayout } from './pages/binLayout';
+import { Home } from './pages/home';
+import Layout from './components/theme';
 
 function App() {
-  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    let connectionState: 1 | 2 | 3 = 1; // 1 = connected, 2 = disconnecting, 3 = disconnected
-    getClient('55420215-355d-478d-abe0-7d5c61e81a4e').then(client => {
-      if (connectionState === 1) {
-        console.log(`client (${client.id}) connected`)
-        
-    } else if (connectionState === 2) {
-        console.log(`disconnecting client (${client.id})`)
-        client.disconnect();        
-        connectionState = 3;
-    }
-    });
-    return () => {
-      connectionState = 2;
-    }
-  }, []);
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return (<Router>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />          
+        <Route path="/bin-layout/:id" element={<BinLayout />} />
+        <Route path="/bin-layout" element={<BinLayout />} />
+      </Route>
+    </Routes>
+  </Router>)
 }
 
 export default App
