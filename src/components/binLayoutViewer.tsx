@@ -1,11 +1,11 @@
 import { createRef, useEffect } from "react";
 import { BinLayout } from "../../backend/src/domain/binLayout"
 import { Observable } from 'rxjs';
-import { matchSome, someNotNullish } from "hmi/src/utility/optional";
-import { draw, toCartesian } from "hmi/src/drawers/htmlCanvas";
-import { font, rbga, textGraphic } from "hmi/src/graphicPrimitives";
-import { point } from "hmi/src/shapePrimitives";
+import { matchSome, none, someNotNullish, Option, some } from "hmi/src/utility/optional";
+import { toCartesian } from "hmi/src/drawers/htmlCanvas";
 import { pipe } from "hmi/src/utility/pipe";
+import { BinLayoutRepresentationState, drawRepresentation, updateRepresentation } from "../domain/binLayoutRepresentation";
+import { now } from "../utility/time";
 
 type BinLayoutViewerArgs = {
     source: Observable<BinLayout>
@@ -16,33 +16,32 @@ export function BinLayoutViewer(args: BinLayoutViewerArgs) {
     const canvasRef = createRef<HTMLCanvasElement>();
     
     useEffect(() => {
+        let isRunning = true;
+        let representation: Option<BinLayoutRepresentationState> = none();
         const contextMaybe = someNotNullish(canvasRef?.current?.getContext('2d'));
-        args.source.subscribe(layout => {
-            console.log('ID!!!!', layout.id, contextMaybe);
-            const text = textGraphic({
-                text: layout.bins.length.toString(),
-                baselineStartPosition: point(200, 150),
-                horizontalAlignment: 'center',
-                color: rbga(255, 0, 0),
-                font: font({
-                    size: 60
-                }),
-                outline: {
-                    thickness: 0.5,
-                    color: rbga(0, 255, 255)
-                }
-            
-            })
+        args.source.subscribe(layout => {            
+            representation = some(updateRepresentation(layout, representation));
+            pipe(representation, matchSome(rep => {
+                console.log(now(), rep);
+            }))
+        })
+        function animate() {
+            if (!isRunning) return;
             pipe(
                 contextMaybe,
                 matchSome(context => {
-                    
-                    toCartesian(context, 1, context => {
-                        draw(text, context)
-                    })
+                    pipe(
+                        representation,
+                        matchSome(representation => toCartesian(context, 1, context => {                            
+                            drawRepresentation(representation, context)
+                        }))                        
+                    )
                 })
             )
-        })
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+        return () => { isRunning = false };
     }, [args.source])
 
     return (

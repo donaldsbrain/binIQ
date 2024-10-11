@@ -1,7 +1,5 @@
-import { useEffect } from 'react'
 import './App.css'
-import { getClient } from './clients/binView';
-import { Route, BrowserRouter as Router, Routes, useParams } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { BinLayout } from './pages/binLayout';
 import { Home } from './pages/home';
 import Layout from './components/theme';

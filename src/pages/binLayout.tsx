@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BinViewClient, getClient } from "../clients/binView";
-import { Option, map, mapAsSome, matchNone, matchSome, none, some, someNotNullish, valueOr } from "hmi/src/utility/optional";
+import { Option, mapAsSome, matchNone, matchSome, none, some, someNotNullish, valueOr } from "hmi/src/utility/optional";
 import { pipe } from "hmi/src/utility/pipe";
 import { BinLayoutViewer } from "../components/binLayoutViewer";
 
