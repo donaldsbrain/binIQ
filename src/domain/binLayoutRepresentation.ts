@@ -140,7 +140,7 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
                 })
             },
             ({ isNew, graphic }) => ({
-                ...previous,
+                ...steady(previous),
                 ...(isNew ? { [updatedAt]: graphic } : {}),
                 [delayTo]: graphic
             })
