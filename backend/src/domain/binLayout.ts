@@ -4,6 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 export type Bin = RectangularBin | CircularBin
 
+type BinProperties = {
+    center: Point
+    fillRatio: number
+}
+
 export type BinLayout = {
     id: string
     background: ColorStyle
@@ -31,20 +36,21 @@ export function binLayout(args: {
 
 export type RectangularBin = {
     type: 'RectangularBin'
-    center: Point
     dimensions: Dimension
-}
+} & BinProperties
 
 type RectangularBinArgs = {
     center: Point
-    dimensions: Dimension
+    dimensions: Dimension,
+    fillRatio?: number
 }
 
 export function rectangularBin(args: RectangularBinArgs): RectangularBin {
     return {
         type: 'RectangularBin',
         center: args.center,
-        dimensions: args.dimensions
+        dimensions: args.dimensions,
+        fillRatio: args.fillRatio ?? 0
     }
 }
 
@@ -60,20 +66,21 @@ export function addRectangularBin(args: RectangularBinArgs): (layout: BinLayout)
 
 export type CircularBin = {
     type: 'CircularBin'
-    center: Point
     radius: number
-}
+} & BinProperties
 
 export type CircularBinArgs = {
     center: Point
     radius: number
+    fillRatio?: number
 }
 
 export function circularBin(args: CircularBinArgs): CircularBin {
     return {
         type: 'CircularBin',
         center: args.center,
-        radius: args.radius
+        radius: args.radius,
+        fillRatio: args.fillRatio ?? 0
     }
 }
 
