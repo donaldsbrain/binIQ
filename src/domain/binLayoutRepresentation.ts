@@ -1,18 +1,19 @@
-import { circle, point, Point, ray, rectangle, rectangleFromRay, segment } from 'hmi/src/shapePrimitives'
+import { circle, Dimension, point, Point, ray, rectangle, rectangleFromRay, segment } from 'hmi/src/shapePrimitives'
 import { steadyState, Timeline } from 'hmi/src/timeline'
 import { Bin, BinLayout, CircularBin, RectangularBin } from '../../backend/src/domain/binLayout'
 import { map, mapAsSome, none, Option, some, someNotNullish, someValues, toOption, valueOr } from 'hmi/src/utility/optional'
 import { pipe } from 'hmi/src/utility/pipe'
 import { circleGraphic, GraphicPrimitive, RectangleGraphic, rectangleGraphic, rgba } from 'hmi/src/graphicPrimitives'
 import { makeExponentialEaseInOut } from 'hmi/src/interpolation'
-import { now } from '../utility/time';
+import { now12 } from '../utility/time';
 import { transition, Transitionable } from 'hmi/src/graphicTimelineCalculations'
 import { TWO_PI } from 'hmi/src/utility/number'
 import { draw } from 'hmi/src/drawers/htmlCanvas'
 import { numberKeys } from 'hmi/src/utility/object'
 
 export type BinLayoutRepresentationState = {
-    updatedAt: number
+    updatedAt: number,
+    dimensions: Dimension,
     background: Timeline<RectangleGraphic>
     bins: BinRepresentation[]
 }
@@ -35,7 +36,7 @@ type CircularBinRepresentation = {
 }
 
 export function drawRepresentation(state: BinLayoutRepresentationState, context: CanvasRenderingContext2D) {
-    const at = now();
+    const at = now12();
     [
         ...[backgroundGraphics()],
         ...state
@@ -102,13 +103,15 @@ export function drawRepresentation(state: BinLayoutRepresentationState, context:
 
 export function updateRepresentation(layout: BinLayout, maybePrevious: Option<BinLayoutRepresentationState>)
     : BinLayoutRepresentationState {
-    const delay = 60;
+    const delay = 18;
     const easeInOut = makeExponentialEaseInOut(3);
-    const updatedAt = now();
+    const updatedAt = now12();
+    const steady = <T>(timeline: Timeline<T>) => steadyState(timeline, updatedAt);
     const delayTo = updatedAt + delay;
     return pipe(
         maybePrevious,
         valueOr<BinLayoutRepresentationState>({
+            dimensions: layout.dimensions,
             background: {
                 method: easeInOut
             },
@@ -116,6 +119,7 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
             updatedAt
         }),
         previous => ({
+            dimensions: layout.dimensions,
             background: updateBackground(previous.background),
             bins: updateBins(previous.bins),
             updatedAt
@@ -186,6 +190,7 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
                 )
             }
             function updateRectangularBin(bin: RectangularBin): RectangularBinRepresentation {
+                
                 return pipe(
                     someNotNullish(previousBins[index]),
                     map(prevBin => prevBin.type === 'RectangularBinRepresentation' 
@@ -212,9 +217,9 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
                     })),
                     previous => ({
                         ...previous,
-                        centerPoint: { ...previous.centerPoint, [delayTo]: bin.center },
-                        width: { ...steadyState(previous.width, updatedAt), [delayTo]: bin.dimensions.width },
-                        height: { ...steadyState(previous.height, updatedAt), [delayTo]: bin.dimensions.height },
+                        centerPoint: { ...steady(previous.centerPoint), [delayTo]: bin.center },
+                        width: { ...steady(previous.width), updatedAt, [delayTo]: bin.dimensions.width },
+                        height: { ...steady(previous.height), updatedAt, [delayTo]: bin.dimensions.height },
                         lineThickness: { ...previous.lineThickness, [delayTo]: layout.lineThickness }
                     })
                 )

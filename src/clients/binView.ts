@@ -35,7 +35,7 @@ export const getClient = (layoutId: string): Promise<BinViewClient> =>
                 socket.on('connect', () => {
                     console.log(`(${clientId}) connected to websocket.`)
                     socket.on('layoutUpdated', (arena: BinLayout) => {
-                        console.log(`(${clientId}) layoutUpdated!`);
+                        //console.log(`(${clientId}) layoutUpdated!`);
                         subject.next(arena);
                     });                    
                 });
