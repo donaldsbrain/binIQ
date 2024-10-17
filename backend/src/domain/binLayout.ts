@@ -63,3 +63,26 @@ export type CircularBin = {
     center: Point
     radius: number
 }
+
+export type CircularBinArgs = {
+    center: Point
+    radius: number
+}
+
+export function circularBin(args: CircularBinArgs): CircularBin {
+    return {
+        type: 'CircularBin',
+        center: args.center,
+        radius: args.radius
+    }
+}
+
+export function addCircularBin(args: CircularBinArgs): (layout: BinLayout) => BinLayout {
+    return layout => ({
+        ...layout,
+        bins: [
+            ...layout.bins,
+            circularBin(args)
+        ]
+    })    
+}

@@ -106,8 +106,8 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
     const delay = 18;
     const easeInOut = makeExponentialEaseInOut(3);
     const updatedAt = now12();
-    const steady = <T>(timeline: Timeline<T>) => steadyState(timeline, updatedAt);
     const delayTo = updatedAt + delay;
+    const steady = <T>(timeline: Timeline<T>) => steadyState(timeline, updatedAt);
     return pipe(
         maybePrevious,
         valueOr<BinLayoutRepresentationState>({
@@ -183,9 +183,9 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
                     })),
                     previous => ({
                         ...previous,
-                        centerPoint: { ...previous.centerPoint, [delayTo]: bin.center },
-                        radius: { ...previous.radius, [delayTo]: bin.radius },
-                        lineThickness: { ...previous.lineThickness, [delayTo]: layout.lineThickness }
+                        centerPoint: { ...steady(previous.centerPoint), [delayTo]: bin.center },
+                        radius: { ...steady(previous.radius), [delayTo]: bin.radius },
+                        lineThickness: { ...steady(previous.lineThickness), [delayTo]: layout.lineThickness }
                     })
                 )
             }
@@ -220,7 +220,7 @@ export function updateRepresentation(layout: BinLayout, maybePrevious: Option<Bi
                         centerPoint: { ...steady(previous.centerPoint), [delayTo]: bin.center },
                         width: { ...steady(previous.width), updatedAt, [delayTo]: bin.dimensions.width },
                         height: { ...steady(previous.height), updatedAt, [delayTo]: bin.dimensions.height },
-                        lineThickness: { ...previous.lineThickness, [delayTo]: layout.lineThickness }
+                        lineThickness: { ...steady(previous.lineThickness), [delayTo]: layout.lineThickness }
                     })
                 )
             }
